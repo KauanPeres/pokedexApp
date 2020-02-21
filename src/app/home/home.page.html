@@ -13,7 +13,7 @@
 
 <!-- List of Sliding Items -->
   <ion-item-sliding *ngFor="let pokemon of listaFiltrada">
-    <ion-item color="light">
+    <ion-item color="light" (click)="abrirDadosPokemon(pokemon)">
 
       <ion-chip color="grass" slot="start">
         <ion-label [color]="pokemon.tipos[0] | lowercase">{{pokemon.numero}}</ion-label>
