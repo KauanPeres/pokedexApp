@@ -10,7 +10,7 @@ export class PokemonApiService {
 
   constructor(public http: HttpClient) { }
 
-  public buscaPokemons (offset: Number, limit = 10){
+  public buscaPokemons(offset: Number, limit = 10){
     return this.http.get(`${this.url}/?offset=${offset}&limit=${limit}`);
   }
 
