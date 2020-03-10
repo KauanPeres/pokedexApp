@@ -83,7 +83,6 @@ export class HomePage {
   public paginaAtual = 0;
 
   constructor(public dadosService : DadosService, public router: Router, public pokeApi: PokemonApiService) {
-    this.resetarLista();
     this.buscarPokemons(this.offset, this.limit);
   }
 
@@ -110,13 +109,14 @@ export class HomePage {
 
       // Percorre a lista e busca na Api os dados do pokemon
       for(let item of listaApi){
-        this.pokeApi.buscaPokemonUrl(item.url).subscribe(dado => {
+        this.pokeApi.buscaPokemonUrl(item.url).subscribe(dadosPokemon => {
           //Adiciona os dados do pokemon ao final da lista
-          this.listaPokemonApi.push(dado);
+          this.listaPokemonApi.push(dadosPokemon);
+
+          //Atualiza a listaFiltrada com os pokemons buscados
+          this.resetarLista();
         });
       }
-      //Atualiza a listaFiltrada com os pokemons buscados
-      this.resetarLista();
     })
   }
 
@@ -130,6 +130,19 @@ export class HomePage {
 
   private resetarLista() {
     // this.listaFiltrada = this.listaPokemons;
+
+    //Ordena a lista de pokemons pelo numero(id)
+    this.listaPokemonApi.sort(function (a, b) {
+      if (a.id > b.id) {
+        return 1;
+      }
+      if (a.id < b.id) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    });
+
     this.listaFiltrada = this.listaPokemonApi;
   }
 
@@ -140,7 +153,7 @@ export class HomePage {
 
     if (busca && busca.trim() !== '') {
       this.listaFiltrada = this.listaFiltrada.filter(dados => {
-        if ((dados.nome.toLowerCase().indexOf(busca.toLowerCase()) > -1) || (dados.numero.toLowerCase().indexOf(busca.toLowerCase()) > -1)) {
+        if ((dados.name.toLowerCase().indexOf(busca.toLowerCase()) > -1) || (String(dados.id).toLowerCase().indexOf(busca.toLowerCase()) > -1)) {
           return true;
         }
         return false;
